@@ -5,32 +5,36 @@
 
 class Robot
 {public:
-double speed=0;};
+double speed=0;
+double turn=0;};
 
 Robot xiaobai;
 rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr fasong;
 
 void jieshou(const std_msgs::msg::Float64 &xiaoxi)
-{std::cout<<"收到了消息："<<xiaoxi.data<<std::endl;
+{std::cout<<"前方距离："<<xiaoxi.data<<" 米"<<std::endl;
 
 if(xiaoxi.data<=2)
 {xiaobai.speed=0;
-std::cout<<"小白停车，当前speed: "<<xiaobai.speed<<std::endl;
+    xiaobai.turn=0.5;
+std::cout<<"小白遇障左转，speed: "<<xiaobai.speed<<" turn: "<<xiaobai.turn<<std::endl;
 
 }
 else if(xiaoxi.data<=4)
 {xiaobai.speed=1;
-std::cout<<"小白减速，当前speed: "<<xiaobai.speed<<std::endl;
+    xiaobai.turn=0;
+std::cout<<"小白减速直行，speed: "<<xiaobai.speed<<" turn: "<<xiaobai.turn<<std::endl;
 
 }
 else
 {xiaobai.speed=2;
-   std::cout<<"小白前进，当前speed: "<<xiaobai.speed<<std::endl; 
+   xiaobai.turn=0;
+std::cout<<"小白前进，speed: "<<xiaobai.speed<<" turn: "<<xiaobai.turn<<std::endl;
 
 }
 geometry_msgs::msg::Twist huifu;
 huifu.linear.x=xiaobai.speed;
-huifu.angular.z=0;
+huifu.angular.z=xiaobai.turn;
 fasong->publish(huifu);
 }
 
